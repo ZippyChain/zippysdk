@@ -1,0 +1,13 @@
+./hmy --node=https://t.s0.n6.zippychain.ai transfer --from zpt1uk4kcqagent8e02qf23rm3vzk0s7rfxvpdzj48 --to zpt1uk4kcqagent8e02qf23rm3vzk0s7rfxvpdzj48 --from-shard 0 --to-shard 1 --amount 200 
+
+./hmy --node=https://t.s0.n6.zippychain.ai balances zpt1uk4kcqagent8e02qf23rm3vzk0s7rfxvpdzj48
+
+./hmy --node="https://t.s0.n6.zippychain.ai" staking create-validator \
+    --validator-addr zpt1uk4kcqagent8e02qf23rm3vzk0s7rfxvpdzj48 --amount 10000 \
+    --bls-pubkeys cb691e17eae277e11e395cca47f1484adb24c6996882f03374635d9c21add717a2520211bb029031a6e30d04e0321501 \
+    --name "testA" --identity "testAA" --details "thisisatest" \
+    --security-contact "testAA@zippy" --website "zippy.com" \
+    --max-change-rate 0.1 --max-rate 0.1 --rate 0.1 \
+    --max-total-delegation 100000000 --min-self-delegation 10000
+    
+./hmy --node="https://t.s0.n6.zippychain.ai" keys generate-bls-keys --count 1
