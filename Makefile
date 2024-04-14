@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 TOP:=$(realpath ..)
-export LD_LIBRARY_PATH:=$(TOP)/bls/lib:$(TOP)/mcl/lib:/usr/local/opt/openssl/lib:/opt/homebrew/opt/gmp/lib/:/opt/homebrew/opt/openssl/lib
+export LD_LIBRARY_PATH:=$(TOP)/zippybls/lib:$(TOP)/zippymcl/lib:/usr/local/opt/openssl/lib:/opt/homebrew/opt/gmp/lib/:/opt/homebrew/opt/openssl/lib
 export LIBRARY_PATH:=$(LD_LIBRARY_PATH)
 version := $(shell git rev-list --count HEAD)
 commit := $(shell git describe --always --long --dirty)
@@ -25,8 +25,17 @@ all:
 	source $(shell go env GOPATH)/src/github.com/harmony-one/harmony/scripts/setup_bls_build_flags.sh && $(env) go build -o $(cli) -ldflags="$(ldflags)" cmd/main.go
 	cp $(cli) hmy
 
+step1:
+	make -C $(shell go env GOPATH)/src/github.com/ZippyChain/zippymcl
+
+step2:
+	make -C $(shell go env GOPATH)/src/github.com/ZippyChain/zippybls minimised_static BLS_SWAP_G=1
+
+step3:
+	source $(shell go env GOPATH)/src/github.com/harmony-one/harmony/scripts/setup_bls_build_flags.sh && $(env) go build -o $(cli) -ldflags="$(ldflags) -w -extldflags \"-static\"" cmd/main.go
+
 static:
-	make -C $(shell go env GOPATH)/src/github.com/harmony-one/mcl
+	make -C $(shell go env GOPATH)/src/github.com/ZippyChain/zippymcl
 	make -C $(shell go env GOPATH)/src/github.com/ZippyChain/zippybls minimised_static BLS_SWAP_G=1
 	source $(shell go env GOPATH)/src/github.com/harmony-one/harmony/scripts/setup_bls_build_flags.sh && $(env) go build -o $(cli) -ldflags="$(ldflags) -w -extldflags \"-static\"" cmd/main.go
 	cp $(cli) hmy
